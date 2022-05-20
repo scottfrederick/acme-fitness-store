@@ -1,0 +1,38 @@
+SOURCE_IMAGE_REPO = os.getenv("SOURCE_IMAGE_REPO", default='your-registry.io/project')
+
+allow_k8s_contexts(k8s_context())
+
+k8s_yaml('catalog-db.yaml')
+
+k8s_resource(new_name='acme-catalog-db',
+			 objects=['acme-catalog-db'],
+			 extra_pod_selectors=[{'postgres-instance': 'acme-catalog-db'}])
+
+k8s_custom_deploy(
+    'acme-fitness-catalog',
+    apply_cmd = "tanzu apps workload apply acme-fitness-catalog " +
+                " --local-path ." +
+                " --source-image " + SOURCE_IMAGE_REPO + "/acme-fitness-catalog-source" +
+                " --type web" +
+                " --label app.kubernetes.io/part-of=acme-fitness" +
+                " --label tanzu.app.live.view=true" +
+                " --label tanzu.app.live.view.application.name=acme-fitness-catalog" +
+                " --service-ref db=sql.tanzu.vmware.com/v1:Postgres:acme-catalog-db" +
+                " --yes >/dev/null" +
+                " && " +
+                "kubectl get workload acme-fitness-catalog -o yaml",
+    delete_cmd = "tanzu apps workload delete acme-fitness-catalog --yes",
+    deps = ['src', 'build.gradle'],
+    container_selector = 'workload',
+    live_update = [
+      sync('./build/classes', '/workspace/BOOT-INF/classes')
+    ]
+)
+
+k8s_resource('acme-fitness-catalog',
+			extra_pod_selectors=[{'serving.knative.dev/service': 'acme-fitness-catalog'}],
+    		resource_deps=['acme-catalog-db'])
+
+update_settings(max_parallel_updates=3,
+				k8s_upsert_timeout_secs=180,
+				suppress_unused_image_warnings=None)
