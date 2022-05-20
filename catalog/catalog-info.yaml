@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: acme-fitness-catalog-info
+  description: Acme Fitness catalog
+  annotations:
+    'backstage.io/techdocs-ref': dir:.
+spec:
+  targets:
+    - ./components/cart.yaml
+    - ./components/catalog.yaml
+    - ./components/identity.yaml
+    - ./components/order.yaml
+    - ./components/payment.yaml
+    - ./components/shopping.yaml
+    - ./domains/acme-fitness.yaml
+    - ./groups/acme-fitness.yaml
+    - ./systems/acme-fitness.yaml
+    - ./resources/catalog-db.yaml
+    - ./resources/order-db.yaml

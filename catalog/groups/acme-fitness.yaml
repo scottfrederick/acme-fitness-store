@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: acme-fitness-team
+  description: Acme Fitness Team
+spec:
+  type: team
+  profile:
+    email: acme-fitness-team@example.com
+  parent: development
+  children: []
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: guest
+spec:
+  profile:
+    displayName: Guest User
+    email: guest1@example.com
+  memberOf: [acme-fitness-team]

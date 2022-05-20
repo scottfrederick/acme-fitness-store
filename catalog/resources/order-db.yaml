@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: acme-fitness-order-db
+  description: Acme Fitness Order database
+  annotations:
+    'backstage.io/techdocs-ref': dir:.
+spec:
+  type: database
+  owner: acme-fitness-team
+  system: acme-fitness

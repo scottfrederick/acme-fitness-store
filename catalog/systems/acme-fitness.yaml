@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: acme-fitness
+  description: Acme Fitness Application
+  annotations:
+    'backstage.io/techdocs-ref': dir:.
+spec:
+  owner: acme-fitness-team
+  domain: acme-fitness-domain

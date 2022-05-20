@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: acme-fitness-domain
+  description: Amce Fitness Cloud Applications
+  annotations:
+    'backstage.io/techdocs-ref': dir:.
+spec:
+  owner: acme-fitness-team
