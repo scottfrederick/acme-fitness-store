@@ -1,4 +1,6 @@
 spring:
+  datasource:
+    url: jdbc:h2:mem:db;MODE=PostgreSQL
   jpa:
     hibernate:
       ddl-auto: create-drop

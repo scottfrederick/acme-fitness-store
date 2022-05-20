@@ -1,5 +1,4 @@
-create table catalog
-(
+create table if not exists catalog (
     id                varchar(36) not null primary key,
     description       varchar(1000),
     image_url1        varchar(1000),
