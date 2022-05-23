@@ -1,4 +1,7 @@
-SOURCE_IMAGE_REPO = os.getenv("SOURCE_IMAGE_REPO", default='your-registry.io/project')
+if 'SOURCE_IMAGE_REPO' not in os.environ:
+    fail("environment variable SOURCE_IMAGE_REPO must be set")
+
+SOURCE_IMAGE_REPO = os.getenv("SOURCE_IMAGE_REPO")
 
 allow_k8s_contexts(k8s_context())
 

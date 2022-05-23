@@ -48,7 +48,17 @@ TANZU_REGISTRY_USERNAME=username TANZU_REGISTRY_PASSWORD=secret ./scripts/create
 
 ## Deploying applications
 
-Once the prerequisites have been met, you can deploy the Acme Fitness Store by navigating to each of the application directories and running the `tilt up` command. For example: 
+Once the prerequisites have been met, you can deploy the Acme Fitness Store by navigating to each of the application directories and deploying them one at a time. 
+
+Applications are started with Tilt using a `Tiltfile` that deploys the app and any dependencies. 
+The TAP supply chain requires the source for each app to be packaged as an OCI image and uploaded to an image repository.
+The location of this source image repository must be set as an environment variable before running Tilt:
+
+```shell
+export SOURCE_IMAGE_REPO=my-registry.example.com/my-repository
+```
+
+Once this is set, run the `tilt up` command:  
 
 ```shell
 cd apps/acme-payment
