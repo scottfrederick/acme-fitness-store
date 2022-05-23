@@ -11,6 +11,7 @@ k8s_custom_deploy(
                 " --label app.kubernetes.io/part-of=acme-fitness" +
                 " --label tanzu.app.live.view=true" +
                 " --label tanzu.app.live.view.application.name=acme-fitness-payment" +
+				" --annotation autoscaling.knative.dev/minScale=1" +
                 " --yes >/dev/null" +
                 " && " +
                 "kubectl get workload acme-fitness-payment -o yaml",

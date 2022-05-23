@@ -2,7 +2,6 @@ SOURCE_IMAGE_REPO = os.getenv("SOURCE_IMAGE_REPO", default='your-registry.io/pro
 
 allow_k8s_contexts(k8s_context())
 
-
 k8s_yaml('order-db.yaml')
 
 k8s_resource(new_name='acme-order-db',
@@ -19,6 +18,7 @@ k8s_custom_deploy(
                 " --label tanzu.app.live.view=true" +
                 " --label tanzu.app.live.view.application.name=acme-fitness-order" +
                 " --service-ref db=sql.tanzu.vmware.com/v1:Postgres:acme-order-db" +
+				" --annotation autoscaling.knative.dev/minScale=1" +
                 " --yes >/dev/null" +
                 " && " +
                 "kubectl get workload acme-fitness-order -o yaml",
