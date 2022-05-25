@@ -14,12 +14,8 @@ from flask import request
 from flask_httpauth import HTTPTokenAuth
 from sentry_sdk.integrations.flask import FlaskIntegration
 from flask import Flask
-from opencensus.ext.azure.trace_exporter import AzureExporter
-from opencensus.ext.flask.flask_middleware import FlaskMiddleware
-from opencensus.trace.samplers import ProbabilitySampler
 from lib.tracing import init_tracer
 from redis_conn import redis_connection
-from azure_vault import vault_secret
 
 # sentry_sdk.init("https://c0f58a327f2c4cd8b29e8cd0a606f0e9@sentry.io/1722363")
 
@@ -42,24 +38,11 @@ dictConfig({
 
 # set variables with env variables
 
-cart_port = environ['CART_PORT'] if environ.get('CART_PORT') not in (None, '') else 5000
+cart_port = environ['PORT'] if environ.get('PORT') not in (None, '') else 5000
 
 auth_url = environ['AUTH_URL'] if environ.get('AUTH_URL') not in (None, '') else ''
 
 auth_mode = int(environ['AUTH_MODE']) if environ.get('AUTH_MODE') not in (None, '') else 1
-
-instrumentation_key = vault_secret('ApplicationInsights--ConnectionString')
-if instrumentation_key is None and environ.get('INSTRUMENTATION_KEY') not in (None, ''):
-    instrumentation_key = environ['INSTRUMENTATION_KEY']
-
-
-# Uncomment below to turnon statsd
-# from statsd import StatsClient
-# statsd = StatsClient(host='localhost',
-#                     port=8125,
-#                     prefix='fitcycle-api-server',
-#                     maxudpsize=512)
-
 
 # initializing flask
 app = Flask(__name__)
@@ -68,14 +51,6 @@ app = Flask(__name__)
 def set_cloud_role(envelope):
     envelope.tags['ai.cloud.role'] = 'cart-service'
 
-
-if instrumentation_key not in (None, ''):
-    middleware = FlaskMiddleware(
-        app,
-        exporter=AzureExporter(connection_string=instrumentation_key),
-        sampler=ProbabilitySampler(rate=1.0),
-    )
-    middleware.exporter.add_telemetry_processor(set_cloud_role)
 
 app.debug = True
 auth = HTTPTokenAuth('Bearer')
@@ -159,19 +134,6 @@ def verify_token(token):
 
     else:
         return True
-
-
-#    if token == '':
-#        app.logger.info('No Authorization Token available or in wrong format')
-#        return False
-#    else:
-#        token="eyJhbGciOiJIUzI1NiIsImtpZCI6InNpZ25pbl8xIiwidHlwIjoiSldUIn0.eyJVc2VybmFtZSI6ImVyaWMiLCJleHAiOjE1Nzg5NDM4NjIsInN1YiI6IjVlMWNiZGM3ZjNkNDkzNmYxMDY0NTZhZiJ9.-RfrYegtYWsF_Y0yzXlBri1PetwNAmAxOt_1WcFhq8M"
-#        url="http://localhost:8081/verify-token"
-#        data=json.dumps('access_token':token)
-#        print("Token is:", token)
-#        return True
-
-#    return False
 
 
 @app.errorhandler(FoundIssue)
@@ -557,6 +519,13 @@ def hello_world(name=None):
 def get_env():
     return jsonify({'redis_info': rConn.info()})
 
+@app.route('/livez', methods=['GET'])
+def liveness():
+    return '', 200
+
+@app.route('/readyz', methods=['GET'])
+def readiness():
+    return '', 200
 
 if __name__ == '__main__':
     insert_data()  # initialize the database with some baseline

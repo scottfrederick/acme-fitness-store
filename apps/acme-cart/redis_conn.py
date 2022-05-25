@@ -3,13 +3,12 @@ import os
 import redis
 from redislite import Redis
 from os import environ
-from azure_vault import vault_secret
 
 
 def redis_connection(logger):
 
-    redis_conn_str = vault_secret('CART-REDIS-CONNECTION-STRING')
-    if redis_conn_str is None and environ.get('REDIS_CONNECTIONSTRING') not in (None, ''):
+    redis_conn_str = ''
+    if environ.get('REDIS_CONNECTIONSTRING') not in (None, ''):
         redis_conn_str = str(environ['REDIS_CONNECTIONSTRING'])
 
     redis_host = environ['REDIS_HOST'] if environ.get('REDIS_HOST') not in (None, '') else None

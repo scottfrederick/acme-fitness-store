@@ -1,67 +1,5 @@
 # Cart
 
-[![gcr.io](https://img.shields.io/badge/gcr.io-stable-orange?style=flat-square)](https://console.cloud.google.com/gcr/images/vmwarecloudadvocacy/GLOBAL/acmeshop-cart@sha256:96ca8cf4f2c538883c754dbacf488966b2113b904c0291a0b99c2c53f51a9233/details?tab=info)
-
-> A cart service, because what is a shop without a cart to put stuff in?
-
-The Cart service is part of the [ACME Fitness Shop](https://github.com/vmwarecloudadvocacy/acme_fitness_demo). The goal of this specific service is to keep track of carts and items in the different carts.
-
-## Prerequisites
-
-There are different dependencies based on whether you want to run a built container, or build a new one.
-
-### Build
-
-* [Python 3.7.2 or higher](https://www.python.org/downloads/)
-* [Pip](https://pip.pypa.io/en/stable/installing/)
-* [Docker](https://www.docker.com/docker-community)
-
-### Run
-
-* [Docker](https://www.docker.com/docker-community)
-* [Redis](https://hub.docker.com/r/bitnami/redis)
-
-## Installation
-
-### Docker
-
-Use this command to pull the latest tagged version of the shipping service:
-
-```bash
-docker pull gcr.io/vmwarecloudadvocacy/acmeshop-cart:stable
-```
-
-To build a docker container, run `docker build . -t vmwarecloudadvocacy/acmeshop-cart:<tag>`.
-
-The images are tagged with:
-
-* `<Major>.<Minor>.<Bug>`, for example `1.1.0`
-* `stable`: denotes the currently recommended image appropriate for most situations
-* `latest`: denotes the most recently pushed image. It may not be appropriate for all use cases
-
-### Source
-
-To build the app as a stand-alone executable, run `pip install -r requirements.txt` to install the Python libraries and run `python3 cart.py` after.
-
-## Usage
-
-The **cart** service, either running inside a Docker container or as a stand-alone app, relies on the below environment variables:
-
-* **REDIS_HOST**: The hostname or IP address to connect to the Redis server (defaults to `localhost`)
-* **REDIS_PORT**: The port to connect to the Redis server (defaults to `6379`)
-* **REDIS_PASSWORD**: The password to connect to Redis (defaults to `blank`)
-* **CART_PORT**: The port number the cart service will listen to requests (defaults to `5000`)
-
-The Docker image is based on the Bitnami Python container. Use this commands to run the latest stable version of the payment service with all available parameters:
-
-```bash
-# Run the Redis container
-docker run -p 6379:6379 bitnami/redis:latest
-
-# Run the cart service
-docker run --rm -it -e REDIS_HOST=localhost -e REDIS_PORT=6379 -e REDIS_PASSWORD=myAwesomePassword -e CART_PORT=5000 -p 5000:5000 gcr.io/vmwarecloudadvocacy/acmeshop-cart:stable
-```
-
 ## API
 
 ### HTTP
@@ -281,12 +219,3 @@ curl --request GET \
 }
 ```
 
-## Contributing
-
-[Pull requests](https://github.com/vmwarecloudadvocacy/order/pulls) are welcome. For major changes, please open [an issue](https://github.com/vmwarecloudadvocacy/order/issues) first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-
-See the [LICENSE](./LICENSE) file in the repository
