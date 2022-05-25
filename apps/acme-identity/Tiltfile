@@ -1,0 +1,34 @@
+if 'SOURCE_IMAGE_REPO' not in os.environ:
+    fail("environment variable SOURCE_IMAGE_REPO must be set")
+
+SOURCE_IMAGE_REPO = os.getenv("SOURCE_IMAGE_REPO")
+
+allow_k8s_contexts(k8s_context())
+
+k8s_custom_deploy(
+    'acme-fitness-identity',
+    apply_cmd = "tanzu apps workload apply acme-fitness-identity " +
+                " --local-path ." +
+                " --source-image " + SOURCE_IMAGE_REPO + "/acme-fitness-identity-source" +
+                " --type web" +
+                " --label app.kubernetes.io/part-of=acme-fitness" +
+                " --label tanzu.app.live.view=true" +
+                " --label tanzu.app.live.view.application.name=acme-fitness-identity" +
+				" --annotation autoscaling.knative.dev/minScale=1" +
+                " --yes >/dev/null" +
+                " && " +
+                "kubectl get workload acme-fitness-identity -o yaml",
+    delete_cmd = "tanzu apps workload delete acme-fitness-identity --yes",
+    deps = ['src', 'build.gradle'],
+    container_selector = 'workload',
+    live_update = [
+      sync('./build/classes', '/workspace/BOOT-INF/classes')
+    ]
+)
+
+k8s_resource('acme-fitness-identity',
+			extra_pod_selectors=[{'serving.knative.dev/service': 'acme-fitness-identity'}])
+
+update_settings(max_parallel_updates=3,
+				k8s_upsert_timeout_secs=90,
+				suppress_unused_image_warnings=None)
