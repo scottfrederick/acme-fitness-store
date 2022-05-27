@@ -11,6 +11,12 @@ k8s_resource(new_name='acme-catalog-db',
 			 objects=['acme-catalog-db'],
 			 extra_pod_selectors=[{'postgres-instance': 'acme-catalog-db'}])
 
+k8s_yaml('catalog-db-binding.yaml')
+
+k8s_resource(new_name='acme-catalog-db-binding',
+			 objects=['acme-catalog-db-binding'],
+			 resource_deps=['acme-catalog-db'])
+
 k8s_custom_deploy(
     'acme-fitness-catalog',
     apply_cmd = "tanzu apps workload apply acme-fitness-catalog " +
@@ -20,7 +26,6 @@ k8s_custom_deploy(
                 " --label app.kubernetes.io/part-of=acme-fitness" +
                 " --label tanzu.app.live.view=true" +
                 " --label tanzu.app.live.view.application.name=acme-fitness-catalog" +
-                " --service-ref db=sql.tanzu.vmware.com/v1:Postgres:acme-catalog-db" +
 				" --annotation autoscaling.knative.dev/minScale=1" +
                 " --yes >/dev/null" +
                 " && " +
@@ -35,7 +40,7 @@ k8s_custom_deploy(
 
 k8s_resource('acme-fitness-catalog',
 			extra_pod_selectors=[{'serving.knative.dev/service': 'acme-fitness-catalog'}],
-    		resource_deps=['acme-catalog-db'])
+    		resource_deps=['acme-catalog-db-binding'])
 
 update_settings(max_parallel_updates=3,
 				k8s_upsert_timeout_secs=180,

@@ -11,6 +11,12 @@ k8s_resource(new_name='acme-order-db',
 			 objects=['acme-order-db'],
 			 extra_pod_selectors=[{'postgres-instance': 'acme-order-db'}])
 
+k8s_yaml('order-db-binding.yaml')
+
+k8s_resource(new_name='acme-order-db-binding',
+			 objects=['acme-order-db-binding'],
+			 resource_deps=['acme-order-db'])
+
 k8s_custom_deploy(
     'acme-fitness-order',
     apply_cmd = "tanzu apps workload apply acme-fitness-order " +
@@ -20,7 +26,6 @@ k8s_custom_deploy(
                 " --label app.kubernetes.io/part-of=acme-fitness" +
                 " --label tanzu.app.live.view=true" +
                 " --label tanzu.app.live.view.application.name=acme-fitness-order" +
-                " --service-ref db=sql.tanzu.vmware.com/v1:Postgres:acme-order-db" +
 				" --annotation autoscaling.knative.dev/minScale=1" +
                 " --yes >/dev/null" +
                 " && " +
@@ -34,7 +39,8 @@ k8s_custom_deploy(
 )
 
 k8s_resource('acme-fitness-order',
-			extra_pod_selectors=[{'serving.knative.dev/service': 'acme-fitness-order'}])
+			extra_pod_selectors=[{'serving.knative.dev/service': 'acme-fitness-order'}],
+    		resource_deps=['acme-order-db-binding'])
 
 update_settings(max_parallel_updates=3,
 				k8s_upsert_timeout_secs=90,

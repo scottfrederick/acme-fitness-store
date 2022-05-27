@@ -1,0 +1,15 @@
+apiVersion: servicebinding.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: acme-order-db-binding
+  labels:
+    app.kubernetes.io/part-of: acme-fitness
+spec:
+  workload:
+    apiVersion: serving.knative.dev/v1
+    kind: Service
+    name: acme-fitness-order
+  service:
+    apiVersion: sql.tanzu.vmware.com/v1
+    kind: Postgres
+    name: acme-order-db
