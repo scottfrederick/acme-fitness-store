@@ -1,8 +1,3 @@
-#!/bin/bash
-
-set -eou pipefail
-
-cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -13,4 +8,3 @@ rules:
 - apiGroups: ["sql.tanzu.vmware.com"]
   resources: ["postgres"]
   verbs: ["get", "list", "watch", "update"]
-EOF

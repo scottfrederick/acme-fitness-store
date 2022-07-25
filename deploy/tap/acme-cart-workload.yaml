@@ -1,0 +1,21 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: acme-fitness-cart
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: acme-fitness
+spec:
+  params:
+    - name: annotations
+      value:
+        autoscaling.knative.dev/minScale: "1"
+  env:
+    - name: AUTH_MODE
+      value: "0"
+  source:
+    git:
+      url: https://github.com/scottfrederick/acme-fitness-store
+      ref:
+        branch: tap-1.1
+    subPath: "apps/acme-cart"

@@ -1,0 +1,9 @@
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ResourceClaim
+metadata:
+  name: acme-catalog-db
+spec:
+  ref:
+    apiVersion: sql.tanzu.vmware.com/v1
+    kind: Postgres
+    name: acme-catalog-db
