@@ -2,3 +2,11 @@ spring:
   sql:
     init:
       mode: always
+  mvc:
+    static-path-pattern: /static/images/**
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 3600
+          cache-public: true

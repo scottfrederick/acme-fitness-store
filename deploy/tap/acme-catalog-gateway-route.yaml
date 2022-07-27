@@ -1,0 +1,43 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: acme-fitness-catalog
+spec:
+  service:
+    name: acme-fitness-catalog
+    filters:
+      - StripPrefix=0
+  routes:
+    - predicates:
+        - Path=/products
+        - Method=GET
+      tags:
+        - catalog
+    - predicates:
+        - Path=/products/{id}
+        - Method=GET
+      tags:
+        - catalog
+    - predicates:
+        - Path=/catalogliveness
+        - Method=GET
+      filters:
+        - SetPath=/actuator/health/liveness
+      tags:
+        - catalog
+    - predicates:
+        - Path=/static/images/{id}
+        - Method=GET
+      tags:
+        - catalog
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: acme-fitness-catalog
+spec:
+  gatewayRef:
+    name: acme-fitness-gateway
+  routeConfigRef:
+    name: acme-fitness-catalog

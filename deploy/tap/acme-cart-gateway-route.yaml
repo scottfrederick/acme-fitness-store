@@ -1,0 +1,52 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: acme-fitness-cart
+spec:
+  service:
+    name: acme-fitness-cart
+    filters:
+      - StripPrefix=0
+    # ssoEnabled: true
+  routes:
+    - predicates:
+        - Path=/cart/item/add/{userId}
+        - Method=POST
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
+        - Path=/cart/item/modify/{userId}
+        - Method=POST
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
+        - Path=/cart/items/{userId}
+        - Method=GET
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
+        - Path=/cart/clear/{userId}
+        - Method=GET
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
+        - Path=/cart/total/{userId}
+        - Method=GET
+      tags:
+        - cart
+      tokenRelay: true
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: acme-fitness-cart
+spec:
+  gatewayRef:
+    name: acme-fitness-gateway
+  routeConfigRef:
+    name: acme-fitness-cart

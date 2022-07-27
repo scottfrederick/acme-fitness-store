@@ -1,0 +1,27 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: acme-fitness-shopping
+spec:
+  service:
+    name: acme-fitness-shopping
+    filters:
+      - StripPrefix=0
+  routes:
+    - predicates:
+        - Path=/**
+        - Method=GET
+      order: 1000
+      tags:
+        - shopping
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: acme-fitness-shopping
+spec:
+  gatewayRef:
+    name: acme-fitness-gateway
+  routeConfigRef:
+    name: acme-fitness-shopping
