@@ -15,7 +15,7 @@ spec:
       ref:
         apiVersion: services.apps.tanzu.vmware.com/v1alpha1
         kind: ResourceClaim
-        name: acme-catalog-db
+        name: acme-fitness-catalog-db
   source:
     git:
       url: https://github.com/scottfrederick/acme-fitness-store

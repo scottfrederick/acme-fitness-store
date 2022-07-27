@@ -1,7 +1,7 @@
 apiVersion: sql.tanzu.vmware.com/v1
 kind: Postgres
 metadata:
-  name: acme-catalog-db
+  name: acme-fitness-catalog-db
 spec:
   imagePullSecret:
     name: tanzu-image-registry
