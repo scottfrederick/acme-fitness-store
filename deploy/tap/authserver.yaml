@@ -1,0 +1,63 @@
+#@ load("@ytt:data", "data")
+
+---
+apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+kind: AuthServer
+metadata:
+  name: acme-fitness-authserver
+  labels:
+    name: acme-fitness-authserver
+    app.kubernetes.io/part-of: acme-fitness
+  annotations:
+    sso.apps.tanzu.vmware.com/allow-client-namespaces: "default"
+    sso.apps.tanzu.vmware.com/allow-unsafe-issuer-uri: ""
+    sso.apps.tanzu.vmware.com/allow-unsafe-identity-provider: ""
+spec:
+  replicas: 1
+  issuerURI: #@ "http://acme-fitness-authserver.{}.{}".format(data.values.namespace,data.values.baseUrl)
+  tokenSignature:
+    signAndVerifyKeyRef:
+      name: "acme-fitness-authserver"
+  identityProviders:
+    - name: "internal"
+      internalUnsafe:
+        users:
+          - username: "user"
+            password: "$2a$10$201z9o/tHlocFsHFTo0plukh03ApBYe4dRiXcqeyRQH6CNNtS8jWK"
+---
+apiVersion: secretgen.k14s.io/v1alpha1
+kind: RSAKey
+metadata:
+  name: acme-fitness-authserver
+spec:
+  secretTemplate:
+    type: Opaque
+    stringData:
+      key.pem: $(privateKey)
+      pub.pem: $(publicKey)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-fitness-authserver
+spec:
+  selector:
+    app.kubernetes.io/part-of: acme-fitness-authserver
+    app.kubernetes.io/component: authorization-server
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: acme-fitness-authserver
+spec:
+  virtualhost:
+    fqdn: #@ "acme-fitness-authserver.{}.{}".format(data.values.namespace,data.values.baseUrl)
+  routes:
+    - conditions:
+        - prefix: /
+      services:
+        - name: acme-fitness-authserver
+          port: 80

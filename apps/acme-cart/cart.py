@@ -198,8 +198,9 @@ def is_number(s):
 
 # @statsd.timer('get_cart_items')
 @app.route('/cart/items/<userid>', methods=['GET'])
+@app.route('/cart/items/<provider>/<userid>', methods=['GET'])
 @auth.login_required
-def get_cart_items(userid):
+def get_cart_items(userid, provider=None):
     span_ctx = cart_tracer.extract(opentracing.Format.HTTP_HEADERS, carrier=request.headers)
     app.logger.info('the request headers are %s', str(request.headers))
     function_name = '/cart/items'
@@ -226,8 +227,9 @@ def get_cart_items(userid):
 
 # gets total items in users cart
 @app.route('/cart/items/total/<userid>', methods=['GET', 'POST'])
+@app.route('/cart/items/total/<provider>/<userid>', methods=['GET', 'POST'])
 @auth.login_required
-def cart_items_total(userid):
+def cart_items_total(userid, provider=None):
     span_ctx = cart_tracer.extract(opentracing.Format.HTTP_HEADERS, request.headers)
 
     function_name = '/cart/items/total'
@@ -288,8 +290,9 @@ def get_all_carts():
 # application/json" --request POST --data '{"mytext":"xyz", "idname":"1234"}' http://34.215.155.50:5000/additem/bill
 # If add is positive returns the userid @statsd.timer('add_item')
 @app.route('/cart/item/add/<userid>', methods=['GET', 'POST'])
+@app.route('/cart/item/add/<provider>/<userid>', methods=['GET', 'POST'])
 @auth.login_required
-def add_item(userid):
+def add_item(userid, provider=None):
     span_ctx = cart_tracer.extract(opentracing.Format.HTTP_HEADERS, request.headers)
 
     function_name = '/cart/items/add'
@@ -364,8 +367,9 @@ def add_item(userid):
 
 
 @app.route('/cart/modify/<userid>', methods=['GET', 'POST'])
+@app.route('/cart/modify/<provider>/<userid>', methods=['GET', 'POST'])
 @auth.login_required
-def replace_cart(userid):
+def replace_cart(userid, provider=None):
     span_ctx = cart_tracer.extract(opentracing.Format.HTTP_HEADERS, request.headers)
 
     function_name = '/cart/modify'
@@ -395,8 +399,9 @@ def replace_cart(userid):
 # clear item from cart
 # minimum content must be {"itemid":"shjhjssr", "quantity":"x"}
 @app.route('/cart/item/modify/<userid>', methods=['GET', 'POST'])
+@app.route('/cart/item/modify/<provider>/<userid>', methods=['GET', 'POST'])
 @auth.login_required
-def delete_item(userid):
+def delete_item(userid, provider=None):
     span_ctx = cart_tracer.extract(opentracing.Format.HTTP_HEADERS, request.headers)
 
     function_name = '/cart/items/modify'
@@ -443,8 +448,9 @@ def delete_item(userid):
 
 # clear cart
 @app.route('/cart/clear/<userid>', methods=['GET', 'POST'])
+@app.route('/cart/clear/<provider>/<userid>', methods=['GET', 'POST'])
 @auth.login_required
-def clear_cart(userid):
+def clear_cart(userid, provider=None):
     span_ctx = cart_tracer.extract(opentracing.Format.HTTP_HEADERS, request.headers)
 
     function_name = '/cart/clear'
@@ -471,8 +477,9 @@ def order(userid):
 
 # get total amount in users cart
 @app.route('/cart/total/<userid>', methods=['GET', 'POST'])
+@app.route('/cart/total/<provider>/<userid>', methods=['GET', 'POST'])
 @auth.login_required
-def cart_total(userid):
+def cart_total(userid, provider=None):
     span_ctx = cart_tracer.extract(opentracing.Format.HTTP_HEADERS, request.headers)
 
     function_name = 'carttotal'
@@ -511,7 +518,7 @@ def cart_total(userid):
 
 # baseline route to check is server is live ;-)
 @app.route('/')
-def hello_world(name=None):
+def hello_world():
     return render_template('hello.html')
 
 

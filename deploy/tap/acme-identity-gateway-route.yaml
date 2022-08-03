@@ -1,0 +1,51 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: acme-fitness-identity
+spec:
+  service:
+    name: acme-fitness-identity
+    ssoEnabled: true
+  routes:
+    - predicates:
+        - Path=/acme-login
+        - Method=GET
+      order: 0
+      filters:
+        - RedirectTo=302, /
+      tags:
+        - sso
+    - predicates:
+        - Path=/whoami
+        - Method=GET
+      filters:
+        - StripPrefix=0
+      tokenRelay: true
+      tags:
+        - users
+    - predicates:
+        - Path=/userinfo
+        - Method=GET
+      filters:
+        - RedirectTo=302, /whoami
+        - SetResponseHeader=Cache-Control, no-store
+      tokenRelay: true
+      tags:
+        - users
+    - predicates:
+        - Path=/verify-token
+        - Method=POST
+      uri: no://op
+      tags:
+        - users
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: acme-fitness-identity
+spec:
+  gatewayRef:
+    name: acme-fitness-gateway
+  routeConfigRef:
+    name: acme-fitness-identity

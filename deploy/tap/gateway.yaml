@@ -1,15 +1,19 @@
+#@ load("@ytt:data", "data")
+
 ---
 apiVersion: tanzu.vmware.com/v1
 kind: SpringCloudGateway
 metadata:
   name: acme-fitness-gateway
 spec:
-  count: 3
+  count: 2
   api:
     title: Acme Fitness APIs
     description: APIs for the Acme Fitness application
     version: 0.0.1
-    serverUrl: https://acme-fitness-gateway.default.tap.scottfrederick.io
+    serverUrl: #@ "http://acme-fitness-gateway.{}.{}".format(data.values.namespace,data.values.baseUrl)
+  sso:
+    secret: acme-fitness-gateway-client-credentials
   env:
     - name: spring.cloud.gateway.httpclient.connect-timeout
       value: "90"
@@ -22,7 +26,7 @@ metadata:
     kubernetes.io/ingress.class: contour
 spec:
   rules:
-    - host: acme-fitness.default.tap.scottfrederick.io
+    - host: #@ "acme-fitness.{}.{}".format(data.values.namespace,data.values.baseUrl)
       http:
         paths:
           - path: /

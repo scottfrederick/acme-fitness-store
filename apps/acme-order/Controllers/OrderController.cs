@@ -22,20 +22,39 @@ namespace acme_order.Controllers
             _orderService = orderService;
         }
 
-        [HttpPost("add/{userid}")]
+        [HttpPost("add/{provider}/{userId}")]
         [ServiceFilter(typeof(AuthorizeResource))]
-        public async Task<ActionResult<OrderCreateResponse>> Create(string userid, Order orderIn)
+        public async Task<ActionResult<OrderCreateResponse>> Create(string userId, Order orderIn, string provider = "")
         {
-            var authorization = HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
-            return await _orderService.Create(userid, orderIn, authorization);
+            return await CreateOrder(userId, orderIn);
         }
+
+        [HttpPost("add/{userId}")]
+        [ServiceFilter(typeof(AuthorizeResource))]
+        public async Task<ActionResult<OrderCreateResponse>> Create(string userId, Order orderIn)
+        {
+            return await CreateOrder(userId, orderIn);
+        }
+
+		private Task<OrderCreateResponse> CreateOrder(string userId, Order orderIn)
+		{
+            var authorization = HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
+            return _orderService.Create(userId, orderIn, authorization);
+		}
 
         [HttpGet("all")]
         [ServiceFilter(typeof(AuthorizeResource))]
         public ActionResult<List<OrderResponse>> Get() =>
             _orderService.Get();
 
-        [HttpGet("{userId}", Name = "GetOrderByUser")]
+        [HttpGet("{provider}/{userId}")]
+        [ServiceFilter(typeof(AuthorizeResource))]
+        public ActionResult<List<OrderResponse>> Get(string userId, string provider = "")
+		{
+			return Get(userId);
+		}
+
+        [HttpGet("{userId}")]
         [ServiceFilter(typeof(AuthorizeResource))]
         public ActionResult<List<OrderResponse>> Get(string userId)
         {

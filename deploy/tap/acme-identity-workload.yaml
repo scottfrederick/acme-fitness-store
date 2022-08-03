@@ -1,0 +1,22 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: acme-fitness-identity
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: acme-fitness
+    networking.knative.dev/visibility: cluster-local
+spec:
+  params:
+    - name: annotations
+      value:
+        autoscaling.knative.dev/minScale: "1"
+  env:
+    - name: spring.security.oauth2.resourceserver.jwt.jwk-set-uri
+      value: http://acme-fitness-authserver.default.tap.scottfrederick.io/oauth2/jwks
+  source:
+    git:
+      url: https://github.com/scottfrederick/acme-fitness-store
+      ref:
+        branch: tap-1.1
+    subPath: "apps/acme-identity"

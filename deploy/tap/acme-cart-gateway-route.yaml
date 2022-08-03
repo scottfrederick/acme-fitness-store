@@ -8,10 +8,16 @@ spec:
     name: acme-fitness-cart
     filters:
       - StripPrefix=0
-    # ssoEnabled: true
+    ssoEnabled: true
   routes:
     - predicates:
         - Path=/cart/item/add/{userId}
+        - Method=POST
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
+        - Path=/cart/item/add/{provider}/{userId}
         - Method=POST
       tags:
         - cart
@@ -23,7 +29,19 @@ spec:
         - cart
       tokenRelay: true
     - predicates:
+        - Path=/cart/item/modify/{provider}/{userId}
+        - Method=POST
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
         - Path=/cart/items/{userId}
+        - Method=GET
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
+        - Path=/cart/items/{provider}/{userId}
         - Method=GET
       tags:
         - cart
@@ -35,7 +53,19 @@ spec:
         - cart
       tokenRelay: true
     - predicates:
+        - Path=/cart/clear/{provider}/{userId}
+        - Method=GET
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
         - Path=/cart/total/{userId}
+        - Method=GET
+      tags:
+        - cart
+      tokenRelay: true
+    - predicates:
+        - Path=/cart/total/{provider}/{userId}
         - Method=GET
       tags:
         - cart
