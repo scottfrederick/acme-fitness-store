@@ -33,7 +33,7 @@ function deleteItem(itemid, userid) {
     }
 
     $.ajax({
-        url: "/cart/item/modify/" + userid,
+        url: "/cart/item/modify/" + encodeURIComponent(userid),
         type: "POST",
         data: JSON.stringify(vals),
         success: function(data, textStatus, jqXHR) {
@@ -62,7 +62,7 @@ function updateCart(itemid, quantity, userid) {
 
     $.ajax({
 
-        url: "/cart/item/modify/" + userid,
+        url: "/cart/item/modify/" + encodeURIComponent(userid),
         type: "POST",
         data: JSON.stringify(vals),
         success: function(data, textStatus, jqXHR) {
@@ -87,7 +87,7 @@ function getCartTotal(userid) {
     var cartTotal = 0
     $.ajax({
 
-        url: "/cart/total/" + userid,
+        url: "/cart/total/" + encodeURIComponent(userid),
         type: "GET",
         async: false,
         success: function(body, textStatus, jqXHR) {
@@ -113,7 +113,10 @@ function getCartTotal(userid) {
 
 function getUserID() {
     var userId = $.cookie('user_id')
-    return userId || 'guest'
+    if (userId) {
+        return userId.replace("/", "_")
+    }
+    return 'guest'
 }
 
 // Returns image url

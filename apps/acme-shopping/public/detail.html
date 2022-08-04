@@ -200,7 +200,7 @@
                 var userid = getUserID();
 
                 $.ajax({
-                  url: "/cart/item/add/" + userid,
+                  url: "/cart/item/add/" + encodeURIComponent(userid),
                   type: "POST",
                   data: JSON.stringify(vals),
                   success: function(data, textStatus, jqXHR) {

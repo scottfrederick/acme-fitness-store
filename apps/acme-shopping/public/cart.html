@@ -192,7 +192,7 @@
 
         $.ajax({
 
-            url: "/cart/items/" + userid,
+            url: "/cart/items/" + encodeURIComponent(userid),
             type: "GET",
             success: function (body, textStatus, jqXHR) {
                 console.log("status cart is " + jqXHR.status)

@@ -129,7 +129,7 @@
 
         $.ajax({
 
-            url: "/cart/clear/" + userid,
+            url: "/cart/clear/" + encodeURIComponent(userid),
             type: "GET",
             success: function (body, textStatus, jqXHR) {
 

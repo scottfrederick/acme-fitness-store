@@ -17,19 +17,7 @@ spec:
       tags:
         - order
     - predicates:
-        - Path=/order/add/{provider}/{userId}
-        - Method=POST
-      tokenRelay: true
-      tags:
-        - order
-    - predicates:
         - Path=/order/{userId}
-        - Method=GET
-      tokenRelay: true
-      tags:
-        - order
-    - predicates:
-        - Path=/order/{provider}/{userId}
         - Method=GET
       tokenRelay: true
       tags:

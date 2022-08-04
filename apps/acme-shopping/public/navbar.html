@@ -55,7 +55,7 @@
         if (userid != "guest") {
             $.ajax({
 
-                url: "/cart/items/" + userid,
+                url: "/cart/items/" + encodeURIComponent(userid),
                 type: "GET",
                 success: function (body, textStatus, jqXHR) {
 

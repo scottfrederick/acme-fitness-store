@@ -25,52 +25,6 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
     <!-- Favicon-->
     <link rel="shortcut icon" href="favicon.png">
-    <!-- <script src="js/client.js"></script>
-    <script src="js/jwt-decode.min.js"></script>
-    <script>
-      window.onload = function() {
-
-        // Add an event listener for form submissions
-        document.getElementById('review').addEventListener('submit', function() {
-          //GET cart
-          var cartGet = new XMLHttpRequest();
-
-          //Build blob
-          var orderBlob = {};
-          orderBlob['userid'] = sessionStorage.userid;
-          orderBlob['firstname'] = sessionStorage.firstname;
-          orderBlob['lastname'] = sessionStorage.lastname;
-          var address = {};
-          address['street'] = sessionStorage.street;
-          address['city'] = sessionStorage.city;
-          address['zip'] = sessionStorage.zip;
-          address['state'] = sessionStorage.state;
-          address['country'] = sessionStorage.country;
-          orderBlob['address'] = address;
-          orderBlob['email'] = sessionStorage.email;
-          orderBlob['delivery'] = sessionStorage.delivery;
-          var card = {};
-          card['type'] = sessionStorage.type;
-          card['number'] = sessionStorage.cardnum;
-          card['ccv'] = sessionStorage.ccv;
-          card['expMonth'] = sessionStorage.expMonth;
-          card['expYear'] = sessionStorage.expYear;
-          orderBlob['card'] = card;
-
-          //Make POST call to order service
-          url: "/order/add/" + user,
-
-          var orderPost = new XMLHttpRequest();
-          orderPost.open("POST", url, true);
-          orderPost.setRequestHeader('Content-Type', 'application/json');
-          orderPost.send(orderBlob);
-
-          //Clear sessionStorage
-          sessionStorage.clear();
-        });
-
-      }
-    </script> -->
   </head>
   <body>
     <!-- *** NAVBAR *** -->
@@ -244,7 +198,7 @@
 
             // Send data to order service
             $.ajax({
-              url: "/order/add/" + userid,
+              url: "/order/add/" + encodeURIComponent(userid),
               type: "POST",
               data: JSON.stringify(orderBlob),
               success: function(data,textStatus, jqXHR) {
@@ -301,7 +255,7 @@
 
           $.ajax({
 
-            url: "/cart/items/" + userid,
+            url: "/cart/items/" + encodeURIComponent(userid),
             type:"GET",
             success: function(body, textStatus, jqXHR) {
 
