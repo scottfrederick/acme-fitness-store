@@ -1,3 +1,6 @@
+#@ load("@ytt:data", "data")
+
+---
 apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
@@ -12,8 +15,8 @@ spec:
       value:
         autoscaling.knative.dev/minScale: "1"
   env:
-    - name: AUTH_MODE
-      value: "0"
+    - name: AUTH_URL
+      value: #@ "http://acme-fitness.{}.{}".format(data.values.namespace,data.values.baseUrl)
   source:
     git:
       url: https://github.com/scottfrederick/acme-fitness-store

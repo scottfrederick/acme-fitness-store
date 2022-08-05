@@ -1,3 +1,6 @@
+#@ load("@ytt:data", "data")
+
+---
 apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
@@ -13,7 +16,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
   env:
     - name: spring.security.oauth2.resourceserver.jwt.jwk-set-uri
-      value: http://acme-fitness-authserver.default.tap.scottfrederick.io/oauth2/jwks
+      value: #@ "http://acme-fitness-authserver.{}.{}/oauth2/jwks".format(data.values.namespace,data.values.baseUrl)
   source:
     git:
       url: https://github.com/scottfrederick/acme-fitness-store

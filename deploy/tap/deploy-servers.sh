@@ -1,6 +1,11 @@
 #!/bin/bash
 
 
+if ! command -v kubectl &> /dev/null; then
+    echo "'kubectl' is required to run this script"
+    exit 1
+fi
+
 if ! command -v ytt &> /dev/null; then
     echo "'ytt' is required to run this script"
     exit 1
