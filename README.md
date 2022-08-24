@@ -31,11 +31,23 @@ This application is composed of several services:
 
 ## What you will need
 
-Before deploying Acme Fitness Store to TAP, the [prerequisites listed in the TAP 1.1 Getting Started Guide](https://docs.vmware.com/en/Tanzu-Application-Platform/1.1/tap/GUID-getting-started.html#getting-started-prerequisites-1) must be met. 
+### Tanzu Application Platform
 
-In addition, the [Tanzu Postgres for Kubernetes Operator](https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/index.html) must be installed in the target cluster.
+Before deploying Acme Fitness Store to TAP, the [prerequisites listed in the TAP 1.2 Getting Started Guide](https://docs.vmware.com/en/Tanzu-Application-Platform/1.2/tap/GUID-getting-started.html#getting-started-prerequisites-1) must be met. 
 
-You will also need [Tilt](https://docs.tilt.dev/install.html) installed. 
+### Additional Operators
+
+The following Kubernetes operators must be installed in the target cluster: 
+
+* [Tanzu Postgres for Kubernetes Operator](https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/index.html) 
+* [Spring Cloud Gateway for Kubernetes](https://docs.vmware.com/en/VMware-Spring-Cloud-Gateway-for-Kubernetes/index.html)
+
+### Local tools
+
+The following tools must be installed locally:
+
+* [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+* [ytt](https://carvel.dev/ytt/)
 
 ### Additional Postgres configuration
 
@@ -48,19 +60,8 @@ TANZU_REGISTRY_USERNAME=username TANZU_REGISTRY_PASSWORD=secret ./scripts/create
 
 ## Deploying applications
 
-Once the prerequisites have been met, you can deploy the Acme Fitness Store by navigating to each of the application directories and deploying them one at a time. 
+Scripts in the `deploy/tap` directory can be used to deploy the Acme Fitness Store applications. 
 
-Applications are started with Tilt using a `Tiltfile` that deploys the app and any dependencies. 
-The TAP supply chain requires the source for each app to be packaged as an OCI image and uploaded to an image repository.
-The location of this source image repository must be set as an environment variable before running Tilt:
+First, run `deploy-servers.sh` to deploy shared infrastructure services that are used by the applications. 
 
-```shell
-export SOURCE_IMAGE_REPO=my-registry.example.com/my-repository
-```
-
-Once this is set, run the `tilt up` command:  
-
-```shell
-cd apps/acme-payment
-tilt up
-```
+Then, run `deploy-workloads.sh` to deploy the applications. 
